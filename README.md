@@ -1,6 +1,11 @@
 # Synthetic Data Generator
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE) ![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green)
+[![License: MIT](https://img.shields.io/github/license/namm9an/Synthetic-Data-Generator?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/namm9an/Synthetic-Data-Generator?style=social)](https://github.com/namm9an/Synthetic-Data-Generator/stargazers)
+[![Backend](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi)](#)
+[![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Tailwind-61DAFB?logo=react)](#)
+[![Deployment](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://synthetic-data-generator.vercel.app)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
 A production-ready synthetic image generator using Stable Diffusion models with FastAPI backend and PostgreSQL storage.
 
@@ -11,6 +16,12 @@ A production-ready synthetic image generator using Stable Diffusion models with 
 - **ML:** PyTorch, HuggingFace Diffusers, Stable Diffusion XL-Turbo
 - **Infrastructure:** Docker-ready, Git, Vercel (future frontend)
 - **AI Models:** Stability AI SDXL-Turbo for fast, high-quality generation
+
+## Live&nbsp;Demo
+
+🌐 **Vercel:** <https://synthetic-data-generator.vercel.app>
+
+> The site auto-deploys from `main` and connects to the FastAPI backend via `/api` proxy.
 
 ## Features
 
@@ -159,9 +170,16 @@ curl "http://localhost:8000/download/{generation-id}" -o dataset.zip
 pytest
 ```
 
-## 📸 Screenshots *(placeholder)*
+## 📸 Screenshots
 
-> (Add demo GIFs / images in later phases.)
+| Page | Screenshot |
+|------|------------|
+| Home | ![Homepage](docs/images/homepage.png) |
+| Generation Form | ![Generation Form](docs/images/generation_form.png) |
+| Preview Gallery | ![Preview Gallery](docs/images/preview_gallery.png) |
+| History Log | ![History Log](docs/images/history_log.png) |
+
+_Screenshots live-generated in Phase 4. Replace these placeholders with high-resolution PNG/JPG files in `docs/images/`._
 
 ---
 

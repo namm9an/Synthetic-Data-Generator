@@ -33,12 +33,31 @@ def setup_directories():
         os.makedirs(directory, exist_ok=True)
         logger.info(f"Directory ensured: {directory}")
 
+def enable_rls_on_generated_images(engine):
+    """Enable RLS on generated_images table if using PostgreSQL."""
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        try:
+            conn.execute(text("ALTER TABLE generated_images ENABLE ROW LEVEL SECURITY;"))
+            conn.execute(text("CREATE POLICY IF NOT EXISTS allow_all ON generated_images FOR ALL USING (true);"))
+            logger.info("RLS enabled on generated_images table (allow_all policy)")
+        except Exception as e:
+            logger.warning(f"Could not enable RLS: {e}")
+
 def main():
     """Main startup function."""
     logger.info("Starting Synthetic Data Generator API server...")
     
     # Ensure required directories exist
     setup_directories()
+    
+    # Enable RLS if using PostgreSQL
+    try:
+        from config.database import engine
+        if engine.url.get_backend_name() == "postgresql":
+            enable_rls_on_generated_images(engine)
+    except Exception as e:
+        logger.warning(f"RLS setup skipped: {e}")
     
     # Check if .env file exists
     env_file = Path(".env")
