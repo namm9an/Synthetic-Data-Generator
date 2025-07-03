@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+.env
+venv/
+.env.*
+
+# Node
+node_modules/
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Allow tracked example env
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated data and cache
+data/output/
+data/generated/
+*.zip
+*.tar.gz
+
+# Large binaries
+*.exe
+*.msi
+*.dmg
+
+# ML Models and Cache (if not using D: drive)
+.cache/
+# Ignore downloaded ML model files but allow our Python model code
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+# Allow our backend/models/ Python code
+!backend/models/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Misc
+.coverage
+.ipynb_checkpoints/
+.idea/
+.vscode/
+.pytest_cache/
