@@ -1,8 +1,7 @@
-# Combined PowerShell script to configure Hugging Face cache to D: drive and start backend
-# This ensures the backend uses the existing cache on D: drive instead of reinstalling to C: drive
+# Startup script for Synthetic Data Generator Backend
+# Configures Hugging Face cache to D: drive and starts the FastAPI server
 
-Write-Host "=== Synthetic Data Generator Backend Startup ===" -ForegroundColor Magenta
-Write-Host "Configuring Hugging Face cache to use D: drive..." -ForegroundColor Green
+Write-Host "Starting Synthetic Data Generator Backend..." -ForegroundColor Green
 
 # Set environment variables for current session
 $env:HF_HOME = "D:\Academics\.cache\huggingface"

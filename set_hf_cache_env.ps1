@@ -1,7 +1,7 @@
-# PowerShell script to set Hugging Face cache environment variables to D: drive
-# Run this script before starting the backend to ensure all processes use D: drive
+# Configure Hugging Face cache to use D: drive
+# Run this before starting the backend
 
-Write-Host "Setting Hugging Face cache environment variables..." -ForegroundColor Green
+Write-Host "Configuring Hugging Face cache..." -ForegroundColor Green
 
 # Set environment variables for current session
 $env:HF_HOME = "D:\Academics\.cache\huggingface"

@@ -1,35 +1,26 @@
-# Hugging Face Cache Configuration for D: Drive
+# Hugging Face Cache Configuration
 
-This document explains how to ensure your Synthetic Data Generator backend uses the Hugging Face models cache on D: drive instead of downloading everything to C: drive.
+This guide explains how to configure Hugging Face models cache to use D: drive for optimized storage.
 
-## Problem
-When running the backend, Hugging Face libraries try to download models to the default cache location on C: drive (`C:\Users\{username}\.cache\huggingface`), but you've already moved the cache to D: drive to save space.
+## Overview
 
-## Solution
-The backend has been updated to automatically configure Hugging Face to use the D: drive cache location.
+By default, Hugging Face downloads models to `C:\Users\{username}\.cache\huggingface`. This configuration redirects the cache to D: drive to save space and improve performance.
 
-## Files Modified
-- `backend/main.py` - Sets environment variables before any imports
-- `backend/models/generator.py` - Also sets environment variables as backup
-- `backend/test_cache_path.py` - Test script to verify cache configuration
+## Quick Setup
 
-## New Helper Scripts
-
-### 1. `set_hf_cache_env.ps1`
-Sets Hugging Face environment variables for the current PowerShell session.
-
-```powershell
-.\set_hf_cache_env.ps1
-```
-
-### 2. `start_backend_d_drive.ps1` (Recommended)
-Complete startup script that:
-- Configures Hugging Face cache to D: drive
-- Activates virtual environment
-- Starts the backend server
-
+### Automated Setup (Recommended)
 ```powershell
 .\start_backend_d_drive.ps1
+```
+
+### Manual Setup
+```powershell
+# Set environment variables
+.\set_hf_cache_env.ps1
+
+# Start backend
+cd backend
+uvicorn main:app --reload
 ```
 
 ## Manual Usage
