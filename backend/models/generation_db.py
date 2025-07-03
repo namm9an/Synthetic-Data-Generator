@@ -8,7 +8,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, Text, Float, DateTime, Boolean
 from sqlalchemy.sql import func
 
-from backend.config.database import Base
+from config.database import Base
 
 
 class Generation(Base):

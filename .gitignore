@@ -28,8 +28,14 @@ Thumbs.db
 # Generated data and cache
 data/output/
 data/generated/
+data/generations/
 *.zip
 *.tar.gz
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
 
 # Large binaries
 *.exe

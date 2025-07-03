@@ -19,16 +19,16 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-from .config.database import Base, engine, get_db
-from .models.generator import SyntheticDataGenerator
-from .models.generation_db import Generation
-from .schemas.generation import (
+from config.database import Base, engine, get_db
+from models.generator import SyntheticDataGenerator
+from models.generation_db import Generation
+from schemas.generation import (
     GenerationRequest, 
     GenerationResponse, 
     DatasetListResponse,
     PreviewResponse
 )
-from .utils.utils import (
+from utils.utils import (
     get_preview_images,
     ensure_directory_exists,
     count_files_in_directory,
@@ -41,11 +41,22 @@ app = FastAPI(
     description="Phase 3: Backend API Endpoints for Synthetic Data Generation"
 )
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Initialize the synthetic data generator (without database dependency)
+try:
+    # Try to create database tables
+    Base.metadata.create_all(bind=engine)
+    print("✅ Database tables created successfully")
+except Exception as e:
+    print(f"⚠️ Database setup warning: {e}")
+    print("The API will still work but without persistent storage")
 
 # Initialize the synthetic data generator
-generator = SyntheticDataGenerator()
+try:
+    generator = SyntheticDataGenerator()
+    print(f"✅ Generator initialized on device: {generator.device}")
+except Exception as e:
+    print(f"⚠️ Generator initialization warning: {e}")
+    generator = None
 
 
 @app.get("/health", tags=["Meta"])
