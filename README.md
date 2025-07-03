@@ -1,10 +1,10 @@
-# Synthetic-Data-Generator
+# Synthetic Data Generator
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE) ![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green)
 
-> **Phase 3 Complete!** Generate high-fidelity synthetic images using Stable Diffusion models, with a production-ready FastAPI backend and PostgreSQL storage.
+A production-ready synthetic image generator using Stable Diffusion models with FastAPI backend and PostgreSQL storage.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Backend:** FastAPI, SQLAlchemy, Pydantic
 - **Database:** PostgreSQL (Supabase)
@@ -12,28 +12,24 @@
 - **Infrastructure:** Docker-ready, Git, Vercel (future frontend)
 - **AI Models:** Stability AI SDXL-Turbo for fast, high-quality generation
 
-## 🎯 Phase 3 Features (COMPLETED)
+## Features
 
-✅ **Synthetic Image Generation**
-- Generate high-quality images using Stable Diffusion XL-Turbo
-- Customizable parameters (noise level, steps, guidance scale)
-- GPU/CPU auto-detection with memory optimization
+- **High-Quality Image Generation**
+  - Stable Diffusion XL-Turbo for producing high-fidelity images.
+  - Customizable parameters for generation.
 
-✅ **Production-Ready API**
-- RESTful API with FastAPI
-- Complete CRUD operations for datasets
-- Image preview and bulk download functionality
-- Comprehensive error handling and logging
+- **Production-Ready API**
+  - RESTful API with FastAPI.
+  - Complete data handling operations.
+  - Enhanced error handling and logging.
 
-✅ **Database Integration**
-- PostgreSQL with SQLAlchemy ORM
-- Generation metadata tracking
-- Supabase cloud database support
+- **Database Integration**
+  - Uses PostgreSQL with SQLAlchemy ORM.
+  - Efficient metadata tracking.
 
-✅ **Smart Cache Management**
-- Automatic Hugging Face cache configuration for D: drive
-- Prevents re-downloading of large models
-- Optimized storage usage
+- **Smart Cache Management**
+  - Optimized Hugging Face model caching.
+  - Prevents redundant downloads and maintains efficiency.
 
 ## 📦 Project Structure
 
