@@ -16,6 +16,7 @@ from datetime import datetime
 from typing import List
 
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -39,6 +40,15 @@ app = FastAPI(
     title="Synthetic Data Generator",
     version="0.3.0",
     description="Phase 3: Backend API Endpoints for Synthetic Data Generation"
+)
+
+# Add CORS middleware to allow frontend connections
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Initialize the synthetic data generator (without database dependency)
@@ -339,3 +349,132 @@ async def download_dataset(id: str, db: Session = Depends(get_db)) -> FileRespon
             status_code=500,
             detail=f"Failed to create download: {str(e)}"
         )
+
+
+@app.get("/samples", tags=["Samples"])
+async def get_samples(db: Session = Depends(get_db)):
+    """Get recent generation samples for display."""
+    try:
+        # Get recent successful generations
+        recent_generations = db.query(Generation).filter(
+            Generation.is_successful == True
+        ).order_by(Generation.created_at.desc()).limit(10).all()
+        
+        samples = []
+        for gen in recent_generations:
+            # Get preview images for each generation
+            preview_images = get_preview_images(gen.output_directory, max_count=1)
+            if preview_images:
+                samples.append({
+                    "id": gen.id,
+                    "class_label": gen.class_label,
+                    "preview": preview_images[0],  # Just first image
+                    "created_at": gen.created_at.isoformat(),
+                    "file_count": gen.file_count
+                })
+        
+        return {"samples": samples}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get samples: {str(e)}"
+        )
+
+
+@app.get("/stats", tags=["Statistics"])
+async def get_stats(db: Session = Depends(get_db)):
+    """Get generation statistics."""
+    try:
+        total_generations = db.query(Generation).count()
+        successful_generations = db.query(Generation).filter(
+            Generation.is_successful == True
+        ).count()
+        failed_generations = total_generations - successful_generations
+        
+        # Get total images generated
+        total_images = db.query(Generation).filter(
+            Generation.is_successful == True
+        ).with_entities(Generation.file_count).all()
+        total_images_count = sum(count[0] or 0 for count in total_images)
+        
+        # Get most popular labels
+        popular_labels = db.query(
+            Generation.class_label,
+            db.func.count(Generation.class_label).label('count')
+        ).filter(
+            Generation.is_successful == True
+        ).group_by(Generation.class_label).order_by(
+            db.func.count(Generation.class_label).desc()
+        ).limit(5).all()
+        
+        return {
+            "total_generations": total_generations,
+            "successful_generations": successful_generations,
+            "failed_generations": failed_generations,
+            "total_images": total_images_count,
+            "popular_labels": [{
+                "label": label,
+                "count": count
+            } for label, count in popular_labels]
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get stats: {str(e)}"
+        )
+
+
+@app.get("/suggest/labels", tags=["Suggestions"])
+async def suggest_labels(q: str = "", db: Session = Depends(get_db)):
+    """Suggest class labels based on query."""
+    try:
+        # Common image class suggestions
+        common_labels = [
+            "cat", "dog", "bird", "car", "house", "tree", "flower", "person", 
+            "bicycle", "airplane", "boat", "train", "truck", "motorcycle",
+            "chair", "table", "laptop", "phone", "book", "cup", "bottle",
+            "apple", "banana", "pizza", "cake", "sandwich", "coffee",
+            "mountain", "beach", "forest", "city", "sunset", "landscape"
+        ]
+        
+        # If query provided, filter suggestions
+        if q.strip():
+            q_lower = q.lower().strip()
+            suggestions = [label for label in common_labels if q_lower in label.lower()]
+        else:
+            suggestions = common_labels[:10]  # Return top 10 if no query
+            
+        # Also get previously used labels from database
+        if q.strip():
+            db_labels = db.query(Generation.class_label).filter(
+                Generation.class_label.ilike(f"%{q}%"),
+                Generation.is_successful == True
+            ).distinct().limit(5).all()
+            db_suggestions = [label[0] for label in db_labels]
+            suggestions.extend(db_suggestions)
+        
+        # Remove duplicates and limit
+        unique_suggestions = list(dict.fromkeys(suggestions))[:10]
+        
+        return {"suggestions": unique_suggestions}
+    except Exception as e:
+        return {"suggestions": []}
+
+
+@app.get("/suggest/noise", tags=["Suggestions"])
+async def suggest_noise(q: str = ""):
+    """Suggest noise level descriptions."""
+    noise_suggestions = [
+        "low noise", "medium noise", "high noise", "minimal noise",
+        "clean", "slightly blurred", "artistic noise", "vintage effect",
+        "film grain", "digital noise", "smooth", "textured"
+    ]
+    
+    # Filter based on query
+    if q.strip():
+        q_lower = q.lower().strip()
+        suggestions = [noise for noise in noise_suggestions if q_lower in noise.lower()]
+    else:
+        suggestions = noise_suggestions[:8]
+    
+    return {"suggestions": suggestions}
